@@ -1,0 +1,33 @@
+.navBar{
+
+}
+
+.toolBar{
+
+}
+
+.grid {
+    width: 90%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    border-spacing: 0px;
+    border-collapse: collapse;
+}
+.notVisited {
+    border: 1px solid black;
+    height: 30px;
+    width:30px;
+}
+
+.start{
+    background-color: green;
+}
+
+.finish{
+    background-color: red;
+}
+
+.wall{
+    background-color: darkgray;
+}
