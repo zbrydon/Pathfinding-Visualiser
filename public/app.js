@@ -114,10 +114,10 @@ function dijkstra(start, finish) {
     let minBinaryHeap = [];
     let count = 0;
 
-    minBinaryHeap.push(null);
+    minBinaryHeap.push(createNode(null, null));
     count++
 
-    for (let i = 0; i <= Yaxis; i++) {
+    /*for (let i = 0; i <= Yaxis; i++) {
         for (let j = 0; j <= Xaxis; j++) {
             minBinaryHeap.push(grid[i][j]);
             count++
@@ -125,11 +125,59 @@ function dijkstra(start, finish) {
 
     }
     console.log(minBinaryHeap);
-    console.log(count);
+    console.log(count);*/
     /*for (let i = count / 2; i >= 1; i--) {
         downHeap(i);
     }*/
+
+    let startNode = minBinaryHeap[minBinaryHeap.findIndex(node => node.start === true)];
+    let finishNode = minBinaryHeap[minBinaryHeap.findIndex(node => node.finish === true)];
     
+
+    startNode.dist = 0;
+
+    minBinaryHeap.push(startNode);
+
+    //let currentNode = startNode;
+
+    while (currentNode != finishNode) {
+        for (let i = 0; i < count; i ++) {
+            if (minBinaryHeap[i].vistited == false) {
+                currentNode = minBinaryHeap[i];
+                currentNode.vistited = true;
+            }                                
+        }
+
+        
+    }
+
+    function getAdjacent(currentNode) {
+        let adjacentNodes = [];
+        if (currentNode.x != 0) {
+            let left = grid[currentNode.x - 1][currentNode.y];
+            adjacentNodes.push(left);
+        }
+        if (currentNode.x != 50) {
+            let right = grid[currentNode.x + 1][currentNode.y];
+            adjacentNodes.push(right);
+        }
+        if (currentNode.y != 0) {
+            let below = grid[currentNode.x][currentNode.y - 1];
+            adjacentNodes.push(below);
+        }
+        if (currentNode.y != 20) {
+            let above = grid[currentNode.x][currentNode.y + 1];
+            adjacentNodes.push(above);
+        }
+        
+
+        return adjacentNodes.filter(node => !node.vistited);
+        
+        
+
+
+    }
+
     function downHeap(start) {
         let min = 0;
         let lChild = start * 2;
