@@ -18,6 +18,14 @@
     border: 1px solid black;
     height: 30px;
     width:30px;
+    background-color:antiquewhite;
+}
+
+.visited {
+    border: 1px solid black;
+    height: 30px;
+    width: 30px;
+    background-color: navy;
 }
 
 .start{
@@ -30,4 +38,7 @@
 
 .wall{
     background-color: darkgray;
+}
+.path{
+    background-color: aquamarine;
 }
