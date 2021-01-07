@@ -10,15 +10,15 @@
     <link rel="icon" href="/images/coding.png">
     
 </head>
-<body>    
+<body>
 
     <div class="toolBar">
         <button id="go" class="Go">Go</button>
-        
+
         <button id="clear" class="Clear">Clear</button>
-        
+
         <button id="stop" class="Stop">Stop</button>
-        
+
         <label for="weight" class="Text"></label>
         <span class="Text">Slow  </span>
         <input type="range" id="weight" min="0" value="0" max="2" step="1" list="volsettings" class="slider">
@@ -29,7 +29,15 @@
             <option>2</option>
         </datalist>
     </div>
+    <div id="myModal" class="modal">
 
+        
+        <div class="modal-content">
+            <span class="close">&times;</span>
+            <p>No path found...</p>
+        </div>
+
+    </div>
     <div class="gridContainer">
         <table class="grid">
             <tr id="r0">

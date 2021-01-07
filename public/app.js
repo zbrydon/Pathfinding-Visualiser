@@ -21,6 +21,21 @@ for (let i = 0; i <= Yaxis; i++) {
     grid.push(row);
     
 }
+
+var modal = document.getElementById("myModal");
+
+var span = document.getElementsByClassName("close")[0];
+
+span.onclick = function () {
+    modal.style.display = "none";
+}
+
+window.onclick = function (event) {
+    if (event.target == modal) {
+        modal.style.display = "none";
+    }
+}
+
 $('.notVisited').click(function () {
     if (start) {
         document.getElementById(`${start}`).classList.remove('start');
@@ -187,14 +202,18 @@ async function dijkstra(start, finish) {
 
                 document.getElementById(`${currentNode.id}`).classList.add('current');
                 document.getElementById(`${currentNode.id}`).classList.remove('current');
-                
+
                 minBinaryHeap[i].vistited = true;
                 document.getElementById(`${currentNode.id}`).classList.remove('notVisited');
                 document.getElementById(`${currentNode.id}`).classList.add('visited');
 
                 break;
             }
-                
+            else if(i == count - 1){
+                modal.style.display = "block";
+                stop = true;
+                break;
+            }
 
         }
         if (currentNode == finishNode) break;
