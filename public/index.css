@@ -3,7 +3,11 @@
 }
 
 .toolBar{
+    
+}
 
+.gridContainer{
+    padding-top:10px;
 }
 
 .grid {
@@ -26,6 +30,10 @@
     height: 30px;
     width: 30px;
     background-color: navy;
+}
+
+.current{
+    background-color:orange;
 }
 
 .start{

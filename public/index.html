@@ -10,16 +10,20 @@
     <link rel="icon" href="/images/coding.png">
     
 </head>
-<body>
-
-    <div class="navBar">
-
-    </div>
+<body>    
 
     <div class="toolBar">
         <button id="go" class="Go">Go</button>
         <button id="clear" class="Clear">Clear</button>
-
+        <label for="weight">Speed:</label>
+        <span>Slow</span>
+        <input type="range" id="weight" min="0" value="0" max="2" step="1" list="volsettings">
+        <span>Fast</span>
+        <datalist id="volsettings">
+            <option>0</option>
+            <option>1</option>
+            <option>2</option>            
+        </datalist>
     </div>
 
     <div class="gridContainer">

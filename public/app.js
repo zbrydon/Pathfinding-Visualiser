@@ -6,6 +6,11 @@ let walls = [];
 const Xaxis = 50;
 const Yaxis = 20;
 
+
+//slow=700 average = 200 fast =10
+
+let delay = 200;
+
 let grid = [];
 
 for (let i = 0; i <= Yaxis; i++) {
@@ -121,7 +126,23 @@ $('#go').click(function (){
     dijkstra(start, finish);
 });
 
-function dijkstra(start, finish) {
+
+$('.optionSelected').html($('#weight').val())
+
+
+$("#weight").on('input', function () {    
+    if ($(this).val() == 2) {
+        delay = 10;
+    }
+    else if ($(this).val() == 1) {
+        delay = 200;
+    }
+    else if ($(this).val() == 0) {
+        delay = 700;
+    }
+});
+
+async function dijkstra(start, finish) {
     if (!start || !finish) return;
     let minBinaryHeap = [];
     let count = 0;
@@ -141,17 +162,27 @@ function dijkstra(start, finish) {
     minBinaryHeap.push(startNode);
     count++
 
-    let currentNode = startNode;
+    let currentNode = startNode;    
+
+    function sleep(ms) {
+        return new Promise(resolve => setTimeout(resolve, ms || 1000));
+    }
+
+    
     
     while (currentNode != finishNode) {
+        await sleep(delay);
         for (let i = 1; i < count; i++) {
             if (minBinaryHeap[i].vistited != true) {
                 currentNode = minBinaryHeap[i];
-                
 
+                document.getElementById(`${currentNode.id}`).classList.add('current');
+                document.getElementById(`${currentNode.id}`).classList.remove('current');
+                
                 minBinaryHeap[i].vistited = true;
                 document.getElementById(`${currentNode.id}`).classList.remove('notVisited');
                 document.getElementById(`${currentNode.id}`).classList.add('visited');
+
                 break;
             }
                 
@@ -220,14 +251,8 @@ function dijkstra(start, finish) {
                 adjacentNodes.push(above);
             }
             
-        }
-        
-
-        return adjacentNodes.filter(node => !node.vistited);
-        
-        
-
-
+        }        
+        return adjacentNodes.filter(node => !node.vistited);       
     }
 
     function downHeap(start) {
