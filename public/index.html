@@ -14,15 +14,19 @@
 
     <div class="toolBar">
         <button id="go" class="Go">Go</button>
+        
         <button id="clear" class="Clear">Clear</button>
-        <label for="weight">Speed:</label>
-        <span>Slow</span>
-        <input type="range" id="weight" min="0" value="0" max="2" step="1" list="volsettings">
-        <span>Fast</span>
+        
+        <button id="stop" class="Stop">Stop</button>
+        
+        <label for="weight" class="Text"></label>
+        <span class="Text">Slow  </span>
+        <input type="range" id="weight" min="0" value="0" max="2" step="1" list="volsettings" class="slider">
+        <span class="Text">Fast</span>
         <datalist id="volsettings">
             <option>0</option>
             <option>1</option>
-            <option>2</option>            
+            <option>2</option>
         </datalist>
     </div>
 

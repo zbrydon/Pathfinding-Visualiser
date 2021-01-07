@@ -7,7 +7,7 @@ const Xaxis = 50;
 const Yaxis = 20;
 
 
-//slow=700 average = 200 fast =10
+let stop = false;
 
 let delay = 200;
 
@@ -142,6 +142,11 @@ $("#weight").on('input', function () {
     }
 });
 
+$('#stop').click(function () {
+    stop = true;
+});
+
+
 async function dijkstra(start, finish) {
     if (!start || !finish) return;
     let minBinaryHeap = [];
@@ -172,6 +177,10 @@ async function dijkstra(start, finish) {
     
     while (currentNode != finishNode) {
         await sleep(delay);
+        if (stop == true) {
+            stop = false;
+            break;
+        }
         for (let i = 1; i < count; i++) {
             if (minBinaryHeap[i].vistited != true) {
                 currentNode = minBinaryHeap[i];
@@ -201,16 +210,17 @@ async function dijkstra(start, finish) {
             downHeap(Math.floor(i));
         }
     }
-    if (currentNode = finishNode) {
+    if (currentNode == finishNode) {
         let path = [];
         let node = finishNode.prev;
         while (node != startNode) {
             path.push(node);
             node = node.prev;
         }
-        for (let i = 0; i < path.length; i++) {
+        for (let i = path.length - 1; i >= 0; i--) {
             document.getElementById(`${path[i].id}`).classList.remove('visited');
             document.getElementById(`${path[i].id}`).classList.add('path');
+            await sleep(delay);
         }
     }
 

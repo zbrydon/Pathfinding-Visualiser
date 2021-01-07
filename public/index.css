@@ -1,9 +1,79 @@
-.navBar{
-
+body {
+    background-color: #262626;
 }
 
-.toolBar{
+.toolBar {
+    height: 10vh;
+    display: flex;
     
+    align-items: center;
+}
+.Go {
+    background-color: #4CAF50;
+    border: none;
+    color: white;
+    padding: 15px 32px;
+    text-align: center;
+    text-decoration: none;
+    display: inline-block;
+    font-size: 16px;
+    margin-right: 20px;
+    margin-left: 110px;
+}
+
+.Stop {
+    background-color: #ff0000;
+    border: none;
+    color: white;
+    padding: 15px 32px;
+    text-align: center;
+    text-decoration: none;
+    display: inline-block;
+    font-size: 16px;
+    margin-right: 20px;
+}
+
+.Clear {
+    background-color: #ff9900;
+    border: none;
+    color: white;
+    padding: 15px 32px;
+    text-align: center;
+    text-decoration: none;
+    display: inline-block;
+    font-size: 16px;
+    margin-right: 20px;
+}
+
+.slider {
+    -webkit-appearance: none;
+    width: auto;
+    height: 25px;
+    background: #d3d3d3;
+    outline: none;
+    opacity: 0.7;
+    -webkit-transition: .2s;
+    transition: opacity .2s;
+    margin-right: 20px;
+}
+
+    .slider:hover {
+        opacity: 1;
+    }
+
+    .slider::-webkit-slider-thumb {
+        -webkit-appearance: none;
+        
+        width: 25px;
+        height: 25px;
+        background: #4CAF50;
+        cursor: pointer;
+    }
+
+.Text{
+    color:white;
+    font:bold 16px arial;
+    margin-right:10px;
 }
 
 .gridContainer{
@@ -11,7 +81,7 @@
 }
 
 .grid {
-    width: 90%;
+    
     display: flex;
     justify-content: center;
     align-items: center;
@@ -21,8 +91,8 @@
 .notVisited {
     border: 1px solid black;
     height: 30px;
-    width:30px;
-    background-color:antiquewhite;
+    width: 30px;
+    background-color: #808080;
 }
 
 .visited {
