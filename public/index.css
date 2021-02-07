@@ -1,48 +1,152 @@
+* {
+    margin: 0;
+    padding: 0;
+}
+
+::-webkit-scrollbar {
+    display: none;
+}
+
 body {
     background-color: #262626;
 }
 
 .toolBar {
-    height: 10vh;
+    height: 7vh;
     display: flex;
-    
+    background-color: #404040;
     align-items: center;
+    border-spacing: 0px;
+    border-collapse: collapse;
 }
 .Go {
-    background-color: #4CAF50;
+    background-color: transparent;
     border: none;
     color: white;
     padding: 15px 32px;
     text-align: center;
     text-decoration: none;
     display: inline-block;
-    font-size: 16px;
-    margin-right: 20px;
+    font: bold 16px arial;
     margin-left: 110px;
+    min-width: 164px;
+    border: solid 2px #262626;
+    border-right: 0;
 }
+    .Go:hover {
+        background-color: #4CAF50;
+    }
 
 .Stop {
-    background-color: #ff0000;
+    background-color: transparent;
     border: none;
     color: white;
     padding: 15px 32px;
     text-align: center;
     text-decoration: none;
     display: inline-block;
-    font-size: 16px;
-    margin-right: 20px;
+    font: bold 16px arial;
+    min-width: 164px;
+    border: solid 2px #262626;
+    border-right: 0;
+}
+    .Stop:hover {
+        background-color: #ff0000;
+    }
+
+.Clearbtn {
+    background-color: transparent;
+    border: none;
+    color: white;
+    padding: 15px 32px;
+    text-align: center;
+    text-decoration: none;
+    display: inline-block;
+    font: bold 16px arial;
+    min-width: 164px;
+    border: solid 2px #262626;
+    border-right: 0;
 }
 
-.Clear {
-    background-color: #ff9900;
-    border: none;
-    color: white;
-    padding: 15px 32px;
-    text-align: center;
-    text-decoration: none;
+.dropdown1 {
+    position: relative;
     display: inline-block;
-    font-size: 16px;
-    margin-right: 20px;
+}
+
+.dropdown1-content {
+    display: none;
+    position: absolute;
+    background-color: #262626;
+    min-width: 160px;
+    box-shadow: 0px 8px 16px 0px rgba(0,0,0,0.2);
+    border: solid 2px #262626;
+    z-index: 1;
+}
+
+    .dropdown1-content a {
+        color: white;
+        font: bold 16px arial;
+        padding: 12px;
+        text-decoration: none;
+        display: block;
+    }
+
+        .dropdown1-content a:hover {
+            background-color: #ff9900;
+        }
+
+.dropdown1:hover .dropdown1-content {
+    display: block;
+}
+
+.dropdown1:hover .Clearbtn {
+    background-color: #ff9900;
+}
+
+.dropbtn {
+    background-color: transparent;
+    padding: 15px 0px;
+    color: white;
+    font: bold 16px arial;
+    min-width: 164px;
+    
+    border: solid 2px #262626;
+    display: inline-block;
+}
+
+.dropdown {
+    position: relative;
+    display: inline-block;
+}
+
+.dropdown-content {
+    display: none;
+    position: absolute;
+    background-color: #262626;
+    min-width: 160px;
+    box-shadow: 0px 8px 16px 0px rgba(0,0,0,0.2);
+    border: solid 2px #262626;
+    z-index: 1;
+}
+
+    .dropdown-content a {
+        color: white;
+        font: bold 16px arial;
+        padding: 12px 16px;
+        text-decoration: none;
+        display: block;
+    }
+
+        .dropdown-content a:hover {
+            background-color: #0000ff;
+        }
+
+.dropdown:hover .dropdown-content {
+    display: block;
+}
+
+.dropdown:hover .dropbtn {
+    background-color: #0000ff;
 }
 
 .slider {
@@ -54,7 +158,8 @@ body {
     opacity: 0.7;
     -webkit-transition: .2s;
     transition: opacity .2s;
-    margin-right: 20px;
+    
+    border: solid 2px #262626;
 }
 
     .slider:hover {
@@ -76,6 +181,20 @@ body {
     margin-right:10px;
 }
 
+.Text1 {
+    color: white;
+    font: bold 16px arial;
+    margin-right:10px;
+    margin-left:30px;
+}
+
+.Text2 {
+    color: white;
+    font: bold 16px arial;
+    margin-right: 30px;
+    margin-left: 10px;
+}
+
 .modal {
     display: none; 
     position: fixed; 
@@ -90,12 +209,13 @@ body {
     background-color: rgba(0,0,0,0.4); 
 }
 
-.modal-content {
-    background-color: #fefefe;
+.modalContent {
+    background-color: #595959;
     margin: auto;
     padding: 20px;
-    border: 1px solid #888;
-    width: 80%;
+    border: 3px solid #000000;
+    width: 20%;
+    
 }
 
 .close {
@@ -112,8 +232,15 @@ body {
         cursor: pointer;
     }
 
-.gridContainer{
-    padding-top:10px;
+.wallOrWeight{
+    background-color: transparent;
+}
+
+
+
+.gridContainer {
+    padding-top: 100px;
+    background-color: #262626;
 }
 
 .grid {
@@ -138,8 +265,32 @@ body {
     background-color: navy;
 }
 
-.current{
-    background-color:orange;
+@keyframes currentNode {
+    0% {
+        background-color: orange;        
+    }
+
+    25% {
+        background-color: #ff5050;
+    }
+
+    50% {
+        background-color: #ff00ff;
+    }
+
+    75% {
+        background-color: #3333cc;
+    }
+
+    100% {
+        background-color: navy;
+    }
+}
+
+.current {
+    animation-name: currentNode;
+    animation-duration: 0.5s;
+    animation-iteration-count: 1;
 }
 
 .start{
@@ -151,8 +302,13 @@ body {
 }
 
 .wall{
-    background-color: darkgray;
+    background-color: black;
 }
+
+.weight {
+    background-color: #003300;
+}
+
 .path{
     background-color: aquamarine;
 }

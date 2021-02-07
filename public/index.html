@@ -14,27 +14,49 @@
 
     <div class="toolBar">
         <button id="go" class="Go">Go</button>
+        <div class="dropdown1">
+            <button id="clear" class="Clearbtn">Clear</button>
+            <div class="dropdown1-content">
+                <a id="clearAll">Clear All</a>
+                <a id="clearSearchPath">Clear Searched Area & Path</a>
+                <a id="clearWalls">Clear Walls</a>
+                <a id="clearWeights">Clear Weights</a>
+            </div>
+        </div>
 
-        <button id="clear" class="Clear">Clear</button>
 
         <button id="stop" class="Stop">Stop</button>
-
-        <label for="weight" class="Text"></label>
-        <span class="Text">Slow  </span>
-        <input type="range" id="weight" min="0" value="0" max="2" step="1" list="volsettings" class="slider">
-        <span class="Text">Fast</span>
+        <div class="dropdown">
+            <button class="dropbtn">Maze Selection</button>
+            <div class="dropdown-content">
+                <a id="wallMaze">Maze of Walls</a>
+                <a id="weightMaze">Maze of Weights</a>
+            </div>
+        </div>
+        <label for="speed" class="Text"></label>
+        <p class="Text1">Slow  </p>
+        <input type="range" id="speed" min="0" value="1" max="2" step="1" list="volsettings" class="slider">
+        <p class="Text2">Fast</p>
         <datalist id="volsettings">
             <option>0</option>
             <option>1</option>
             <option>2</option>
         </datalist>
+        <form class="wallOrWeight">
+            <input type="radio" id="wall" name="wall||weight" value="Wall">
+            <label for="wall" class="Text">Wall</label>
+            <input type="radio" id="weight" name="wall||weight" value="Weight">
+            <label for="weight" class="Text">Weight</label>
+        </form>
+
+
     </div>
     <div id="myModal" class="modal">
 
         
-        <div class="modal-content">
+        <div class="modalContent">
             <span class="close">&times;</span>
-            <p>No path found...</p>
+            <p class="Text">No path found...</p>
         </div>
 
     </div>

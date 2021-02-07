@@ -2,14 +2,16 @@ let start = null;
 let finish = null;
 let mouseDown = false;
 let walls = [];
+let weights = [];
 
 const Xaxis = 50;
 const Yaxis = 20;
 
-
+let Wall = false;
+let Weight = false;
 let stop = false;
 
-let delay = 200;
+let delay = 100;
 
 let grid = [];
 
@@ -35,6 +37,17 @@ window.onclick = function (event) {
         modal.style.display = "none";
     }
 }
+
+
+$('#wall').click(function () {
+    Wall = true;
+    Weight = false;
+})
+
+$('#weight').click(function () {
+    Weight = true;
+    Wall = false;
+})
 
 $('.notVisited').click(function () {
     if (start) {
@@ -76,7 +89,7 @@ $('.notVisited').mousedown(function () {
 })
 
 $('.notVisited').mouseenter(function () {
-    if (mouseDown) {
+    if (mouseDown && Wall) {
         wall = event.target.id;
         let [x, y] = wall.split('~');
         grid[y][x].wall = true;
@@ -93,6 +106,23 @@ $('.notVisited').mouseenter(function () {
         $(this).addClass('wall');
         
         walls.push(wall);
+    } else if (mouseDown && Weight) {
+        weight = event.target.id;
+        let [x, y] = weight.split('~');
+        grid[y][x].weight = true;
+        if (grid[y][x].start) {
+            document.getElementById(`${start}`).classList.remove('start');
+            let [x, y] = start.split('~');
+            grid[y][x].start = false;
+        }
+        if (grid[y][x].finish) {
+            document.getElementById(`${finish}`).classList.remove('finish');
+            let [x, y] = finish.split('~');
+            grid[y][x].finish = false;
+        }
+        $(this).addClass('weight');
+        
+        weights.push(weight);
     } else
         return;
 })
@@ -101,7 +131,8 @@ $('.notVisited').mouseup(function () {
     mouseDown = false;
 })
 
-$('#clear').click(function () {
+$('#clearAll').click(function () {
+    stop = true;
     if (start) {
         document.getElementById(`${start}`).classList.remove('start');
         let [x, y] = start.split('~');
@@ -118,6 +149,11 @@ $('#clear').click(function () {
         let [x, y] = walls[i].split('~');
         grid[y][x].wall = false;
     }
+    for (let i = 0; i < weights.length; i++) {
+        document.getElementById(`${weights[i]}`).classList.remove('weight');
+        let [x, y] = weights[i].split('~');
+        grid[y][x].weight = false;
+    }
 
     for (let i = 0; i <= Yaxis; i++) {        
         for (let j = 0; j <= Xaxis; j++) {
@@ -125,6 +161,7 @@ $('#clear').click(function () {
             document.getElementById(`${grid[i][j].id}`).classList.add('notVisited');
             document.getElementById(`${grid[i][j].id}`).classList.remove('visited');
             document.getElementById(`${grid[i][j].id}`).classList.remove('path');
+            document.getElementById(`${grid[i][j].id}`).classList.remove('current'); 
         }
 
     }
@@ -135,9 +172,43 @@ $('#clear').click(function () {
     
 });
 
-$('#go').click(function (){
-    //pick algorithm 
+$('#clearSearchPath').click(function () {
+    stop = true;
+    for (let i = 0; i <= Yaxis; i++) {
+        for (let j = 0; j <= Xaxis; j++) {
+            grid[i][j].vistited = false;
+            document.getElementById(`${grid[i][j].id}`).classList.add('notVisited');
+            document.getElementById(`${grid[i][j].id}`).classList.remove('visited');
+            document.getElementById(`${grid[i][j].id}`).classList.remove('path');
+            document.getElementById(`${grid[i][j].id}`).classList.remove('current');
+        }
 
+    }
+
+})
+
+$('#clearWalls').click(function () {
+    stop = true;
+    for (let i = 0; i < walls.length; i++) {
+        document.getElementById(`${walls[i]}`).classList.remove('wall');
+        let [x, y] = walls[i].split('~');
+        grid[y][x].wall = false;
+    }
+
+})
+
+$('#clearWeights').click(function () {
+    stop = true;
+    for (let i = 0; i < weights.length; i++) {
+        document.getElementById(`${weights[i]}`).classList.remove('weight');
+        let [x, y] = weights[i].split('~');
+        grid[y][x].weight = false;
+    }
+
+})
+
+$('#go').click(function (){
+    //pick algorithm     
     dijkstra(start, finish);
 });
 
@@ -145,12 +216,12 @@ $('#go').click(function (){
 $('.optionSelected').html($('#weight').val())
 
 
-$("#weight").on('input', function () {    
+$("#speed").on('input', function () {    
     if ($(this).val() == 2) {
         delay = 10;
     }
     else if ($(this).val() == 1) {
-        delay = 200;
+        delay = 100;
     }
     else if ($(this).val() == 0) {
         delay = 700;
@@ -161,15 +232,84 @@ $('#stop').click(function () {
     stop = true;
 });
 
+$('#wallMaze').click(function () {
+    for (let i = 0; i < walls.length; i++) {
+        document.getElementById(`${walls[i]}`).classList.remove('wall');
+        let [x, y] = walls[i].split('~');
+        grid[y][x].wall = false;
+    }
+    for (let i = 0; i < weights.length; i++) {
+        document.getElementById(`${weights[i]}`).classList.remove('weight');
+        let [x, y] = weights[i].split('~');
+        grid[y][x].weight = false;
+    }
+    for (let i = 0; i <= Yaxis; i++) {        
+        for (let j = 0; j <= Xaxis; j++) {
+            if (Math.random() < 0.3) {
+                wall = grid[i][j].id;
+                grid[i][j].wall = true;
+
+
+                if (grid[i][j].start) {
+                    document.getElementById(`${start}`).classList.remove('start');
+                    let [x, y] = start.split('~');
+                    grid[y][x].start = false;
+                }
+                if (grid[i][j].finish) {
+                    document.getElementById(`${finish}`).classList.remove('finish');
+                    let [x, y] = finish.split('~');
+                    grid[y][x].finish = false;
+                }
+                
+                document.getElementById(`${wall}`).classList.add('wall');
+
+                walls.push(wall);
+            }            
+        }       
+    }    
+});
+
+$('#weightMaze').click(function () {
+    for (let i = 0; i < walls.length; i++) {
+        document.getElementById(`${walls[i]}`).classList.remove('wall');
+        let [x, y] = walls[i].split('~');
+        grid[y][x].wall = false;
+    }
+    for (let i = 0; i < weights.length; i++) {        
+        document.getElementById(`${weights[i]}`).classList.remove('weight');
+        let [x, y] = weights[i].split('~');
+        grid[y][x].weight = false;
+    }
+    for (let i = 0; i <= Yaxis; i++) {
+        for (let j = 0; j <= Xaxis; j++) {
+            if (Math.random() < 0.3) {
+                weight = grid[i][j].id;
+                grid[i][j].weight = true;
+
+
+                if (grid[i][j].start) {
+                    document.getElementById(`${start}`).classList.remove('start');
+                    let [x, y] = start.split('~');
+                    grid[y][x].start = false;
+                }
+                if (grid[i][j].finish) {
+                    document.getElementById(`${finish}`).classList.remove('finish');
+                    let [x, y] = finish.split('~');
+                    grid[y][x].finish = false;
+                }                
+                document.getElementById(`${weight}`).classList.add('weight');
+
+                weights.push(weight);
+            }
+        }
+    } 
+});
 
 async function dijkstra(start, finish) {
     if (!start || !finish) return;
-    let minBinaryHeap = [];
+    let nodes = [];
     let count = 0;
 
-    minBinaryHeap.push(createNode(null, null));
-    count++
-    
     let [x, y] = start.split('~');
     let startNode = grid[y][x];
 
@@ -179,7 +319,7 @@ async function dijkstra(start, finish) {
     startNode.dist = 0;
     startNode.prev = null;
 
-    minBinaryHeap.push(startNode);
+    nodes.push(startNode);
     count++
 
     let currentNode = startNode;    
@@ -188,28 +328,33 @@ async function dijkstra(start, finish) {
         return new Promise(resolve => setTimeout(resolve, ms || 1000));
     }
 
-    
-    
     while (currentNode != finishNode) {
-        await sleep(delay);
+
         if (stop == true) {
             stop = false;
+            
+            document.getElementById(`${currentNode.id}`).classList.remove('visited');
+
+            document.getElementById(`${currentNode.id}`).classList.add('notVisited');
             break;
-        }
-        for (let i = 1; i < count; i++) {
-            if (minBinaryHeap[i].vistited != true) {
-                currentNode = minBinaryHeap[i];
+        }        
+        for (let i = 1; i < count; i++) {            
+            if (nodes[i].vistited != true) {
+                currentNode = nodes[i];
 
                 document.getElementById(`${currentNode.id}`).classList.add('current');
-                document.getElementById(`${currentNode.id}`).classList.remove('current');
+                await sleep(delay);
+                
 
-                minBinaryHeap[i].vistited = true;
+                nodes[i].vistited = true;
                 document.getElementById(`${currentNode.id}`).classList.remove('notVisited');
+                document.getElementById(`${currentNode.id}`).classList.remove('weight');
+                
                 document.getElementById(`${currentNode.id}`).classList.add('visited');
 
                 break;
             }
-            else if(i == count - 1){
+            else if (i == count - 1) {
                 modal.style.display = "block";
                 stop = true;
                 break;
@@ -218,16 +363,12 @@ async function dijkstra(start, finish) {
         }
         if (currentNode == finishNode) break;
         let adjacentNodes = getAdjacent(currentNode);
-        
+
         for (let i = 0; i < adjacentNodes.length; i++) {
-            minBinaryHeap.push(adjacentNodes[i]);
+            nodes.push(adjacentNodes[i]);
             count++;
         }
-        for (let i = (count - 1) / 2; i >= 1; i--) {
-            if (i == 0)
-                return;
-            downHeap(Math.floor(i));
-        }
+        nodes.sort(function ({ dist: a }, { dist: b }) { return a - b });        
     }
     if (currentNode == finishNode) {
         let path = [];
@@ -249,25 +390,32 @@ async function dijkstra(start, finish) {
             let left = grid[currentNode.y][currentNode.x - 1];
             if (left.vistited != true && left.wall != true) {
                 left.prev = currentNode;
-                left.dist = currentNode.dist + 1;
+                if (left.weight == true)
+                    left.dist = currentNode.dist + 5;
+                else
+                    left.dist = currentNode.dist + 1;
                 adjacentNodes.push(left);
             }
-            
         }
         if (currentNode.x != 50) {
             let right = grid[currentNode.y][currentNode.x + 1];
             if (right.vistited != true && right.wall != true) {
                 right.prev = currentNode;
-                right.dist = currentNode.dist + 1;
+                if (right.weight == true)
+                    right.dist = currentNode.dist + 5;
+                else
+                    right.dist = currentNode.dist + 1;
                 adjacentNodes.push(right);
             }
-            
         }
         if (currentNode.y != 20) {
             let below = grid[currentNode.y + 1][currentNode.x];
             if (below.vistited != true && below.wall != true) {
                 below.prev = currentNode;
-                below.dist = currentNode.dist + 1;                
+                if (below.weight == true)
+                    below.dist = currentNode.dist + 5;
+                else
+                    below.dist = currentNode.dist + 1;                
                 adjacentNodes.push(below);
             }
             
@@ -276,42 +424,16 @@ async function dijkstra(start, finish) {
             let above = grid[currentNode.y - 1][currentNode.x];
             if (above.vistited != true && above.wall != true) {
                 above.prev = currentNode;
-                above.dist = currentNode.dist + 1;
+                if (above.weights == true)
+                    above.dist = currentNode.dist + 5;
+                else
+                    above.dist = currentNode.dist + 1;
                 adjacentNodes.push(above);
             }
             
         }        
         return adjacentNodes.filter(node => !node.vistited);       
-    }
-
-    function downHeap(start) {
-        let min = 0;
-        let lChild = start * 2;
-        let rChild = start * 2 + 1;
-
-        if (count - 1 < lChild) return;
-        else if (count - 1 == lChild) {
-            if (minBinaryHeap[start].dist > minBinaryHeap[lChild].dist) {
-                Swap(start, lChild);
-            }
-            return;
-        }
-        else {
-            if (minBinaryHeap[lChild].dist < minBinaryHeap[rChild].dist)
-                min = lChild;
-            else
-                min = rChild;
-            if (minBinaryHeap[start].dist > minBinaryHeap[min].dist)
-                Swap(start, min);
-        }
-        downHeap(min);
-
-    }
-    function Swap(from, to) {
-        let temp = minBinaryHeap[from];
-        minBinaryHeap[from] = minBinaryHeap[to];
-        minBinaryHeap[to] = temp;
-    }
+    }    
 }
 
 function createNode(x , y) {
@@ -322,6 +444,7 @@ function createNode(x , y) {
     node.start = false;
     node.finish = false;
     node.wall = false;
+    node.weight = false;
     node.dist = Infinity;
     node.vistited = false
     node.prev = null;
