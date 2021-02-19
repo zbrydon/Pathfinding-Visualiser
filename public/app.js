@@ -18,7 +18,7 @@ let grid = [];
 for (let i = 0; i <= Yaxis; i++) {
     let row = [];
     for (let j = 0; j <= Xaxis; j++) {
-        row.push(createNode(j, i))
+        row.push(createNode(j, i))        
     }
     grid.push(row);
     
@@ -54,11 +54,14 @@ $('.notVisited').click(function () {
         document.getElementById(`${start}`).classList.remove('start');
         let [x, y] = start.split('~');
         grid[y][x].start = false;
+        //grid[y][x].dist = Infinity;
+
     } 
     start = event.target.id;
     let [x, y] = start.split('~');
     if (grid[y][x].wall) return;
     grid[y][x].start = true;
+    //grid[y][x].dist = 0;
     $(this).addClass('start');
     
     if (start == finish) {
@@ -71,6 +74,7 @@ $('.notVisited').contextmenu(function () {
         document.getElementById(`${finish}`).classList.remove('finish');
         let [x, y] = finish.split('~');
         grid[y][x].finish = false;
+        
     }
     finish = event.target.id;
     let [x, y] = finish.split('~');
@@ -162,6 +166,8 @@ $('#clearAll').click(function () {
             document.getElementById(`${grid[i][j].id}`).classList.remove('visited');
             document.getElementById(`${grid[i][j].id}`).classList.remove('path');
             document.getElementById(`${grid[i][j].id}`).classList.remove('current'); 
+            document.getElementById(`${grid[i][j].id}`).classList.remove('current1');
+            document.getElementById(`${grid[i][j].id}`).classList.remove('current2');
         }
 
     }
@@ -181,6 +187,8 @@ $('#clearSearchPath').click(function () {
             document.getElementById(`${grid[i][j].id}`).classList.remove('visited');
             document.getElementById(`${grid[i][j].id}`).classList.remove('path');
             document.getElementById(`${grid[i][j].id}`).classList.remove('current');
+            document.getElementById(`${grid[i][j].id}`).classList.remove('current1');
+            document.getElementById(`${grid[i][j].id}`).classList.remove('current2');
         }
 
     }
@@ -207,11 +215,15 @@ $('#clearWeights').click(function () {
 
 })
 
-$('#go').click(function (){
+$('#dijksta').click(function (){
     //pick algorithm     
     dijkstra(start, finish);
 });
 
+$('#aStar').click(function () {
+    //pick algorithm     
+    aStar(start, finish);
+});
 
 $('.optionSelected').html($('#weight').val())
 
@@ -305,6 +317,106 @@ $('#weightMaze').click(function () {
     } 
 });
 
+function createNode(x, y) {
+    let node = Object.create(null);
+    node.id = `${x}~${y}`;
+    node.x = x;
+    node.y = y;
+    node.start = false;
+    node.finish = false;
+    node.wall = false;
+    node.weight = false;
+    node.dist = Infinity;
+    node.vistited = false
+    node.prev = null;
+    node.f = null;
+    node.g = null;
+    node.h = null;
+    return node;
+}
+
+async function aStar(start, finish) {
+    if (!start || !finish) return;
+
+    let open = [];
+    let closed = [];
+
+    let [x, y] = start.split('~');
+    let startNode = grid[y][x];
+
+    [x, y] = finish.split('~');
+    let finishNode = grid[y][x];
+
+    startNode.dist = 0;
+    startNode.g = 0;
+    startNode.h = manhattanDist(startNode);
+    startNode.f = startNode.g + startNode.h;
+
+    open.push(startNode);
+    let current = open[0];
+    while (open.length != 0) {
+        if (stop == true) {
+            stop = false;
+            break;
+        }
+            
+        current = open[0];
+        closed.push(current);
+        open.shift();
+        document.getElementById(`${current.id}`).classList.remove('notVisited');
+        document.getElementById(`${current.id}`).classList.remove('weight');
+        document.getElementById(`${current.id}`).classList.add('current1');
+        await sleep(delay);
+        if (current === finishNode)
+            break;
+        let adjacents = getAdjacent(current);
+        for (let i = 0; i < adjacents.length; i++) {
+            let node = adjacents[i];            
+            if (closed.includes(node))
+                continue;
+            if (!open.includes(node)) {                
+                node.g = node.dist;
+                node.h = manhattanDist(node);
+                node.f = node.g + node.h;
+                node.vistited = true;
+                open.push(node);
+                document.getElementById(`${node.id}`).classList.remove('notVisited');
+                document.getElementById(`${node.id}`).classList.remove('weight');
+                document.getElementById(`${node.id}`).classList.add('current2');
+                open.sort(function ({ f: a }, { f: b }) { return a - b });
+            } 
+
+            await sleep(delay);
+            document.getElementById(`${node.id}`).classList.remove('current');
+            document.getElementById(`${node.id}`).classList.remove('current1');
+            /*document.getElementById(`${node.id}`).classList.remove('current2');*/
+            document.getElementById(`${node.id}`).classList.add('visited');
+        }
+    }
+    if (open.length == 0 && current !== finishNode) {
+        modal.style.display = "block";
+        stop = true;
+    }else if (current == finishNode) {
+        let path = [];
+        let node = finishNode.prev;
+        while (node != startNode) {
+            path.push(node);
+            node = node.prev;
+        }
+        for (let i = path.length - 1; i >= 0; i--) {
+            document.getElementById(`${path[i].id}`).classList.remove('visited');
+            document.getElementById(`${path[i].id}`).classList.add('path');
+            await sleep(delay);
+        }
+    }
+
+    function manhattanDist(node) {
+        let h = Math.abs(node.x - finishNode.x) + Math.abs(node.y - finishNode.y);
+        return h;
+    }    
+
+}
+
 async function dijkstra(start, finish) {
     if (!start || !finish) return;
     let nodes = [];
@@ -324,9 +436,7 @@ async function dijkstra(start, finish) {
 
     let currentNode = startNode;    
 
-    function sleep(ms) {
-        return new Promise(resolve => setTimeout(resolve, ms || 1000));
-    }
+    
 
     while (currentNode != finishNode) {
 
@@ -384,69 +494,60 @@ async function dijkstra(start, finish) {
         }
     }
 
-    function getAdjacent(currentNode) {
-        let adjacentNodes = [];
-        if (currentNode.x != 0) {
-            let left = grid[currentNode.y][currentNode.x - 1];
-            if (left.vistited != true && left.wall != true) {
-                left.prev = currentNode;
-                if (left.weight == true)
-                    left.dist = currentNode.dist + 5;
-                else
-                    left.dist = currentNode.dist + 1;
-                adjacentNodes.push(left);
-            }
-        }
-        if (currentNode.x != 50) {
-            let right = grid[currentNode.y][currentNode.x + 1];
-            if (right.vistited != true && right.wall != true) {
-                right.prev = currentNode;
-                if (right.weight == true)
-                    right.dist = currentNode.dist + 5;
-                else
-                    right.dist = currentNode.dist + 1;
-                adjacentNodes.push(right);
-            }
-        }
-        if (currentNode.y != 20) {
-            let below = grid[currentNode.y + 1][currentNode.x];
-            if (below.vistited != true && below.wall != true) {
-                below.prev = currentNode;
-                if (below.weight == true)
-                    below.dist = currentNode.dist + 5;
-                else
-                    below.dist = currentNode.dist + 1;                
-                adjacentNodes.push(below);
-            }
-            
-        }
-        if (currentNode.y != 0) {
-            let above = grid[currentNode.y - 1][currentNode.x];
-            if (above.vistited != true && above.wall != true) {
-                above.prev = currentNode;
-                if (above.weights == true)
-                    above.dist = currentNode.dist + 5;
-                else
-                    above.dist = currentNode.dist + 1;
-                adjacentNodes.push(above);
-            }
-            
-        }        
-        return adjacentNodes.filter(node => !node.vistited);       
-    }    
+       
 }
 
-function createNode(x , y) {
-    let node = Object.create(null);
-    node.id = `${x}~${y}`;
-    node.x = x;
-    node.y = y;
-    node.start = false;
-    node.finish = false;
-    node.wall = false;
-    node.weight = false;
-    node.dist = Infinity;
-    node.vistited = false
-    node.prev = null;
-    return node;
+function sleep(ms) {
+    return new Promise(resolve => setTimeout(resolve, ms || 1000));
 }
+
+function getAdjacent(currentNode) {
+    let adjacentNodes = [];
+    if (currentNode.x != 0) {
+        let left = grid[currentNode.y][currentNode.x - 1];
+        if (left.vistited != true && left.wall != true) {
+            left.prev = currentNode;
+            if (left.weight == true)
+                left.dist = currentNode.dist + 5;
+            else
+                left.dist = currentNode.dist + 1;
+            adjacentNodes.push(left);
+        }
+    }
+    if (currentNode.x != 50) {
+        let right = grid[currentNode.y][currentNode.x + 1];
+        if (right.vistited != true && right.wall != true) {
+            right.prev = currentNode;
+            if (right.weight == true)
+                right.dist = currentNode.dist + 5;
+            else
+                right.dist = currentNode.dist + 1;
+            adjacentNodes.push(right);
+        }
+    }
+    if (currentNode.y != 20) {
+        let below = grid[currentNode.y + 1][currentNode.x];
+        if (below.vistited != true && below.wall != true) {
+            below.prev = currentNode;
+            if (below.weight == true)
+                below.dist = currentNode.dist + 5;
+            else
+                below.dist = currentNode.dist + 1;
+            adjacentNodes.push(below);
+        }
+
+    }
+    if (currentNode.y != 0) {
+        let above = grid[currentNode.y - 1][currentNode.x];
+        if (above.vistited != true && above.wall != true) {
+            above.prev = currentNode;
+            if (above.weights == true)
+                above.dist = currentNode.dist + 5;
+            else
+                above.dist = currentNode.dist + 1;
+            adjacentNodes.push(above);
+        }
+
+    }
+    return adjacentNodes.filter(node => !node.vistited);
+} 

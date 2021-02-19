@@ -19,7 +19,7 @@ body {
     border-spacing: 0px;
     border-collapse: collapse;
 }
-.Go {
+.Gobtn {
     background-color: transparent;
     border: none;
     color: white;
@@ -28,14 +28,50 @@ body {
     text-decoration: none;
     display: inline-block;
     font: bold 16px arial;
-    margin-left: 110px;
+    
     min-width: 164px;
     border: solid 2px #262626;
     border-right: 0;
 }
-    .Go:hover {
+    .Gobtn:hover {
         background-color: #4CAF50;
     }
+
+.dropdown2 {
+    position: relative;
+    display: inline-block;
+    margin-left: 110px;
+}
+
+.dropdown2-content {
+    display: none;
+    position: absolute;
+    background-color: #262626;
+    min-width: 215px;
+    box-shadow: 0px 8px 16px 0px rgba(0,0,0,0.2);
+    border: solid 2px #262626;
+    z-index: 1;
+}
+
+    .dropdown2-content a {
+        color: white;
+        font: bold 16px arial;
+        padding: 12px;
+        text-decoration: none;
+        display: block;
+    }
+
+        .dropdown2-content a:hover {
+            background-color: #4CAF50;
+        }
+
+.dropdown2:hover .dropdown2-content {
+    display: block;
+}
+
+.dropdown2:hover .Gobtn {
+    background-color: #4CAF50;
+}
 
 .Stop {
     background-color: transparent;
@@ -291,6 +327,40 @@ body {
     animation-name: currentNode;
     animation-duration: 0.5s;
     animation-iteration-count: 1;
+    background-color:navy;
+}
+
+@keyframes currentNode2 {
+    0% {
+        background-color: #ffff00;
+    }
+
+    25% {
+        background-color: #99ff66;
+    }
+
+    50% {
+        background-color: #00ff00;
+    }
+
+    75% {
+        background-color: #00ccff;
+    }
+
+    100% {
+        background-color: #0000ff;
+    }
+}
+
+.current2 {
+    animation-name: currentNode2;
+    animation-duration: 0.5s;
+    animation-iteration-count: 1;
+    background-color: navy;
+}
+
+.current1 {
+    background-color: #ff3300;
 }
 
 .start{
